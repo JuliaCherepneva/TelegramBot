@@ -1,6 +1,5 @@
 package pro.sky.telegrambot.services;
 
-import com.pengrad.telegrambot.model.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.listener.TelegramBotUpdatesListener;
 import pro.sky.telegrambot.model.NotificationTask;
 import pro.sky.telegrambot.repositories.NotificationTaskRepository;
-
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -37,8 +35,9 @@ public class ScheduledServiceImpl implements ScheduledService{
 
         for (NotificationTask task : tasks) {
             notificationTaskService.sendNotification(task.getChatId(), task.getText());
+            logger.info("Sent a notification");
         }
-        logger.info("Sent a notification");
+
     }
 }
 

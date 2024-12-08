@@ -13,8 +13,6 @@ public interface NotificationTaskRepository extends JpaRepository<NotificationTa
 
     @Query(value = "SELECT * FROM notification_task WHERE date_and_time = :currentDateTime", nativeQuery = true)
     Collection<NotificationTask> findByDateAndTime(@Param("currentDateTime") LocalDateTime currentDateTime);
-
-    @Query(value = "UPDATE notification_task SET chatid = :chatId", nativeQuery = true)
-    void saveChatId (@Param("chatId") Long chatId);
+    
 
 }

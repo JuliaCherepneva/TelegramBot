@@ -2,6 +2,7 @@ package pro.sky.telegrambot.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambot.repositories.NotificationTaskRepository;
 import pro.sky.telegrambot.services.NotificationTaskService;
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -20,15 +20,16 @@ import java.util.List;
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private final NotificationTaskService notificationTaskService;
-    private final NotificationTaskRepository notificationTaskRepository;
+
+
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
     @Autowired
     private TelegramBot telegramBot;
 
-    public TelegramBotUpdatesListener(NotificationTaskService notificationTaskService, NotificationTaskRepository notificationTaskRepository) {
+    public TelegramBotUpdatesListener(NotificationTaskService notificationTaskService) {
         this.notificationTaskService = notificationTaskService;
-        this.notificationTaskRepository = notificationTaskRepository;
+
     }
 
     @PostConstruct
@@ -42,16 +43,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
         String text = update.message().text();
         Long chatId = update.message().chat().id();
-        //Сохраняем номер чата в БД
-        notificationTaskRepository.saveChatId(chatId);
 
         if (text.equals("/start")) {
             SendResponse response = telegramBot.execute(new SendMessage(chatId,
                     "Добро пожаловать! Я могу напомнить вам выполнить любую задачу! Вы можете написать дату и время напоминания в формате: ДД.ММ.ГГГГ ЧЧ:ММ, и текст напоминания в одном сообщении. А далее дело за мной ;) В указанную дату и время вы получите от меня уведомление. Желаю удачи!"));
         } else {
-            notificationTaskService.add(text);
-            // SendResponse response = telegramBot.execute(new SendMessage(update.message().chat().id(), "Ваше сообщение принято"));
-            // logger.info("Сообщение доставлено");
+            notificationTaskService.add(update.message());
+           SendResponse response = telegramBot.execute(new SendMessage(update.message().chat().id(), "Ваше сообщение принято, ожидайте напоминания :)"));
+           logger.info("Сообщение доставлено");
         }
         });
 
