@@ -1,4 +1,4 @@
-package pro.sky.telegrambot;
+package pro.sky.telegrambot.exceptions;
 
 public class BadMessageException extends RuntimeException {
     public BadMessageException(String message) {
