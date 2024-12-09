@@ -18,5 +18,11 @@ CREATE TABLE notification_task (
   date_and_time TIMESTAMP NOT NULL
   );
 
+  -- changeset julia:4
+  ALTER TABLE notification_task ALTER COLUMN chatId TYPE INTEGER;
+
+  -- changeset julia:5
+  ALTER TABLE notification_task ALTER COLUMN chatId TYPE BIGINT;
+
 
 

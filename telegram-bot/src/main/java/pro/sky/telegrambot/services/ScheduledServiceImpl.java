@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 
-
 @Service
 @Transactional
 public class ScheduledServiceImpl implements ScheduledService{
@@ -34,10 +33,9 @@ public class ScheduledServiceImpl implements ScheduledService{
         Collection<NotificationTask> tasks = notificationTaskRepository.findByDateAndTime(currentDateTime);
 
         for (NotificationTask task : tasks) {
-            notificationTaskService.sendNotification(task.getChatId(), task.getText());
+            notificationTaskService.sendNotification(task.getChatId(), "✅Напоминаю: " + task.getText());
             logger.info("Sent a notification");
         }
-
     }
 }
 
